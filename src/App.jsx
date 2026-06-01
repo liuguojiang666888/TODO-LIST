@@ -1,122 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useState } from "react";
+import { useTodos } from "./hooks/useTodos";
+import TodoForm from "./components/TodoForm";
+import TodoList from "./components/TodoList";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { todos, addTodo, toggleTodo, deleteTodo } = useTodos();
+  const [filter, setFilter] = useState("all"); // 过滤状态
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
+    <div style={{ maxWidth: "500px", margin: "40px auto" }}>
+      <h1 style={{ textAlign: "center" }}>TodoList</h1>
+
+      {/* 添加表单 */}
+      <TodoForm onAdd={addTodo} />
+
+      {/* 过滤按钮 */}
+      <div style={{
+        display: "flex",
+        gap: "8px",
+        marginBottom: "16px"
+      }}>
         <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
+          onClick={() => setFilter("all")}
+          style={{
+            padding: "6px 12px",
+            flex: 1,
+            backgroundColor: filter === "all" ? "#2196f3" : "#fff",
+            color: filter === "all" ? "#fff" : "#000"
+          }}
         >
-          Count is {count}
+          全部
         </button>
-      </section>
+        <button
+          onClick={() => setFilter("undone")}
+          style={{
+            padding: "6px 12px",
+            flex: 1,
+            backgroundColor: filter === "undone" ? "#2196f3" : "#fff",
+            color: filter === "undone" ? "#fff" : "#000"
+          }}
+        >
+          未完成
+        </button>
+        <button
+          onClick={() => setFilter("done")}
+          style={{
+            padding: "6px 12px",
+            flex: 1,
+            backgroundColor: filter === "done" ? "#2196f3" : "#fff",
+            color: filter === "done" ? "#fff" : "#000"
+          }}
+        >
+          已完成
+        </button>
+      </div>
 
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+      {/* 列表 */}
+      <TodoList
+        todos={todos}
+        filter={filter}
+        onToggle={toggleTodo}
+        onDelete={deleteTodo}
+      />
+    </div>
+  );
 }
 
-export default App
+export default App;
